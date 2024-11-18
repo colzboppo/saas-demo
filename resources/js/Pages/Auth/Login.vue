@@ -14,6 +14,10 @@ defineProps({
     status: {
         type: String,
     },
+    oauth_providers: {
+        type: Array,
+        required: true,
+    },
 });
 
 const form = useForm({
@@ -76,6 +80,21 @@ const submit = () => {
                         >Remember me</span
                     >
                 </label>
+            </div>
+
+            <h4 class="mt-6 text-center text-lg font-medium text-gray-700">
+                Login with OAuth
+            </h4>
+
+            <div class="mt-4 flex flex-col items-center gap-4">
+                <!-- Loop through OAuth providers -->
+                <div v-for="provider in oauth_providers" :key="provider.name">
+                    <a :href="route('oauth-login', provider.name.toLowerCase())"
+                        class="flex items-center justify-center rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700">
+                        <i class="material-icons mr-2" :title="provider.icon">link</i>
+                        Login with {{ provider.name }}
+                    </a>
+                </div>
             </div>
 
             <div class="mt-4 flex items-center justify-end">
