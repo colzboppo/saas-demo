@@ -16,6 +16,13 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::middleware('guest')->group(function () {
+    // OAuth redirect
+    Route::get('/auth/{provider}/redirect', [OAuthLoginController::class, 'redirectToProvider'])->where('driver','google')
+        ->name('oauth-login');
+
+    // OAuth authorisation
+    Route::get('/auth/{provider}/callback', [OAuthLoginController::class, 'handleAuthorization'])->where('driver','google')
+        ->name('oauth-authorize');
 
     Route::get('register', [RegisteredUserController::class, 'create'])
         ->name('register');
