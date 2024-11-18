@@ -14,7 +14,7 @@ class OAuthLoginController extends Controller
     /**
      * handles our login / redirect to OAuth provider
      */
-    public function redirectToProvider(string $provider, Request $request)
+    public function redirectToProvider(string $provider)
     {
         return Socialite::driver($provider)->stateless()->redirect();
     }
@@ -22,7 +22,7 @@ class OAuthLoginController extends Controller
     /**
      * handles our authorized callback OAuth provider
      */
-    public function handleAuthorization(string $provider, Request $request)
+    public function handleAuthorization(string $provider)
     {
         /** @var Laravel\Socialite\Two\User $oauthUser */
         $socialite = Socialite::driver($provider);

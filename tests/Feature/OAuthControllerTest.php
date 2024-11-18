@@ -4,9 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\Session;
 use Tests\TestCase;
 use Laravel\Socialite\Facades\Socialite;
 use Mockery;
@@ -52,18 +49,25 @@ class OAuthControllerTest extends TestCase
     #[Group("oauth")]
     public function test_redirect_to_provider()
     {
-        // Mock the Socialite driver
-        $provider = $this->mock(\Laravel\Socialite\Contracts\Provider::class);
-        $provider->shouldReceive('driver')
-            ->with('google');
-        $provider->shouldReceive('stateless')
-            ->andReturn($provider);
+        $providers = collect([
+            'github' => 'https://github.com/login/oauth/authorize',
+            'google' => 'https://accounts.google.com/o/oauth2/auth',
+        ]);
+        $providers->each(function ($auth_url, $provider_type) {
+            // Mock the Socialite driver
+            $provider = $this->mock(\Laravel\Socialite\Contracts\Provider::class);
+            $provider->shouldReceive('driver')
+                ->with($provider_type);
+            $provider->shouldReceive('stateless')
+                ->andReturn($provider);
+                
+            $auth_redirect = config('oauth.enabled_providers.auth_url').'/redirect';
+            $response = $this->get($auth_redirect);
 
-        $response = $this->get('/auth/google/redirect');
+            $response->assertStatus(302);
 
-        $response->assertStatus(302);
-
-        $this->assertStringStartsWith('https://accounts.google.com/o/oauth2/auth', $response->headers->get('Location'));
+            $this->assertStringStartsWith($auth_url, $response->headers->get('Location'));
+        });
     }
 
     #[Group("oauth")]

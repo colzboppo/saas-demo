@@ -38,7 +38,13 @@ return [
     'google' => [
         'client_id' => env('GOOGLE_OAUTH_CLIENT_ID'),
         'client_secret' => env('GOOGLE_OAUTH_CLIENT_SECRET'),
-        'redirect' => env('GOOGLE_OAUTH_REDIRECT_URI'),
+        'redirect' => config('oauth.enabled_providers.google.auth_url').'callback',
+    ],
+
+    'github' => [
+        'client_id' => env('GITHUB_OAUTH_CLIENT_ID'),
+        'client_secret' => env('GITHUB_OAUTH_CLIENT_SECRET'),
+        'redirect' => config('oauth.enabled_providers.github.auth_url').'callback',
     ],
 
 ];
