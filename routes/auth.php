@@ -11,17 +11,17 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
- 
- 
+
+
 
 
 Route::middleware('guest')->group(function () {
     // OAuth redirect
-    Route::get('/auth/{provider}/redirect', [OAuthLoginController::class, 'redirectToProvider'])->where('driver','google')
+    Route::get('/auth/{provider}/redirect', [OAuthLoginController::class, 'redirectToProvider'])->where('driver', 'google|github')
         ->name('oauth-login');
 
     // OAuth authorisation
-    Route::get('/auth/{provider}/callback', [OAuthLoginController::class, 'handleAuthorization'])->where('driver','google')
+    Route::get('/auth/{provider}/callback', [OAuthLoginController::class, 'handleAuthorization'])->where('driver', 'google|github')
         ->name('oauth-authorize');
 
     Route::get('register', [RegisteredUserController::class, 'create'])
